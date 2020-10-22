@@ -3,15 +3,20 @@ var squareSize = 25
 
 function bruteForceLine(x1,y1,xn, yn, color) {
   var m = (yn - y1) / (xn -x1)
-
+  
   if (m < 1) {
-    for (var x = x1; x < xn; x++) {
+    var originX = x1 < xn ? x1 : xn
+    var destinyX = x1 < xn ? xn : x1
+    for (var x = originX; x < destinyX; x++) {
       var y = Math.round(y1 + m* (x - x1))
       fillSquare(x * squareSize, y * squareSize, squareSize, color)
     }
   } else {
     var n = (xn - x1)/ (yn -y1)
-    for (var y = y1; y < yn; y++) {
+    var originY = y1 < yn ? y1 : yn
+    var destinyY = y1 < yn ? yn : y1
+    
+    for (var y = originY; y < destinyY; y++) {
       var x = Math.round(x1 + n* (y - y1))
       fillSquare(x * squareSize, y * squareSize, squareSize, color)
     }
@@ -71,3 +76,5 @@ drawSquares()
 bruteForceLine(5, 5, 10, 10, 'blue')
 
 bruteForceLine(3, 3, 5, 9, 'red')
+
+bruteForceLine(15, 10, 1, 1, 'purple')
