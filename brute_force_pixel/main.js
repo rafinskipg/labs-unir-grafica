@@ -21,7 +21,7 @@ function bruteForceLine(x1, y1, xn, yn, color) {
     }
   }
 
-  drawReaLine(x1, y1, xn, yn)
+  drawRealLine(x1, y1, xn, yn)
 }
 
 function bresenham_line(x1, y1, xn, yn, swapped = false, color) {
@@ -29,6 +29,7 @@ function bresenham_line(x1, y1, xn, yn, swapped = false, color) {
   var dy = yn - y1
   var step = 1
 
+  // Si la pendiente es > 1 invertimos el algoritmo
   if (Math.abs(dy) > Math.abs(dx)) {
     bresenham_line(y1, x1, yn, xn, true, color)
     return
@@ -62,27 +63,31 @@ function bresenham_line(x1, y1, xn, yn, swapped = false, color) {
   }
 
   if (!swapped) {
-    drawReaLine(x1, y1, xn, yn)
+    drawRealLine(x1, y1, xn, yn)
 
   } else {
-    drawReaLine(y1, x1, yn, xn)
+    drawRealLine(y1, x1, yn, xn)
   }
 
 }
 
 var canvas
 var context
+var centerPointX 
+var centerPointY
 
 function init() {
   canvas = document.getElementById('canvas');
   context = canvas.getContext('2d');
+  centerPointX = Math.round((canvas.width / squareSize) / 2) * squareSize
+  centerPointY = Math.round((canvas.height  / squareSize) / 2 ) * squareSize
 }
 
-function drawReaLine(x1, y1, xn, yn) {
+function drawRealLine(x1, y1, xn, yn, lineWidth = 1) {
   context.save()
-  context.moveTo(x1 * squareSize, y1 * squareSize)
-
-  context.lineTo(xn * squareSize, yn * squareSize)
+  context.moveTo(x1  * squareSize + centerPointX, -y1 * squareSize + centerPointY  )
+  context.lineWidth = lineWidth
+  context.lineTo(xn * squareSize + centerPointX, -yn * squareSize + centerPointY)
   context.stroke()
   context.restore()
 }
@@ -92,7 +97,7 @@ function fillSquare(x, y, size, color) {
   context.beginPath();
 
   console.log('fill', x, y, size)
-  context.rect(x, y, size, size);
+  context.rect(x + centerPointX, - y + centerPointY -squareSize, size, size);
   context.fillStyle = color;
   context.fill();
   context.closePath();
@@ -115,8 +120,27 @@ function drawSquares() {
   }
 }
 
+function drawCenters() {
+
+  context.save()
+  context.moveTo(0, centerPointY)
+  context.lineWidth = 3
+  context.lineTo(canvas.width, centerPointY)
+  context.stroke()
+  context.restore()
+
+  context.save()
+  context.moveTo(centerPointX, 0)
+  context.lineWidth = 3
+  context.lineTo(centerPointX, canvas.height)
+  context.stroke()
+  context.restore()
+}
+
 init()
 drawSquares()
+drawCenters()
+
 
 bruteForceLine(5, 5, 10, 10, 'blue')
 
@@ -125,3 +149,6 @@ bruteForceLine(3, 3, 5, 9, 'red')
 bruteForceLine(15, 10, 1, 1, 'purple')
 
 bresenham_line(0, 0, 3, 8, false, 'green')
+
+bresenham_line(-5, -2, -2, 8, false, 'yellow')
+
